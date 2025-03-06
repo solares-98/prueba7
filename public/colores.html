@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CSS/SVG Animated Circles</title>
+  <link rel="stylesheet" href="styles/color.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<section class="container">
+  
+    <h2>No utilizar el color:</h2>
+  
+    <!-- HTML Chart -->
+    <figure class="chart" data-percent="100">
+        <figcaption>Blanco</figcaption>
+            <img class="blanco" src="images/gentleman.png">
+    <svg width="200" height="200">
+        <circle class="outer" cx="97" cy="96" r="85" transform="rotate(-90, 95, 95)"/>
+    </svg>
+    </figure>
+  
+    <!-- CSS Chart -->
+    <figure class="chart" data-percent="100">
+        <figcaption>Terracota</figcaption>
+            <img class="terracota" src="images/lady.png">
+    <svg width="200" height="200">
+        <circle class="outer" cx="97" cy="96" r="85" transform="rotate(-90, 95, 95)"/>
+    </svg>
+    </figure>
+  
+  
+    <!-- Javascript Chart -->
+    <figure class="chart" data-percent="100">
+        <figcaption>Ivory</figcaption>
+            <img class="ivory" src="images/gentleman.png">
+    <svg width="200" height="200">
+        <circle class="outer" cx="97" cy="96" r="85" transform="rotate(-90, 95, 95)"/>
+    </svg>
+    </figure>
+  
+    <!-- Node.js Chart -->
+    <figure class="chart" data-percent="100">
+        <figcaption>Rojo</figcaption>
+            <img class="rojo" src="images/lady.png">
+    <svg width="200" height="200">
+        <circle class="outer" cx="97" cy="96" r="85" transform="rotate(-90, 95, 95)"/>
+    </svg>
+    </figure>
+<h3>Vestimenta semiformal</h3>
+<p>Hombres: Pantalón, camisa de vestir, zapatos, corbata y saco(ópcional).</p>
+<p>Mujeres: Pantalón, camisa de vestir, zapatos, corbata y saco(ópcional).</p>
+</section>
+<!-- partial -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const charts = document.querySelectorAll('.chart');
+
+    function isElementInViewport(el) {
+    const rect = el.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  }
+
+    function checkCharts() {
+    charts.forEach(chart => {
+        if (isElementInViewport(chart)) {
+            chart.querySelector('.outer').style.animationPlayState = 'running';
+        }
+    });
+    }
+
+    window.addEventListener('scroll', checkCharts);
+    checkCharts(); // Comprobar al cargar la página
+});
+    </script>
+</body>
+</html>
