@@ -303,16 +303,14 @@ function isInView(element) {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(formData)
                 });
-    
-                console.log("Respuesta del servidor status:", response.status);
-    
-                if (!response.ok) {
-                    console.error("Error en la respuesta del servidor:", response);
-                    throw new Error("Error en la respuesta del servidor");
-                }
-    
                 const data = await response.json();
                 console.log("Respuesta del servidor:", data);
+    
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error("Error en la respuesta del servidor:", response, errorText);
+                    throw new Error("Error en la respuesta del servidor: " + errorText);
+                }
     
                 $("#mensaje-confirmacion").html("¡Gracias por confirmar tu asistencia!");
     
@@ -328,7 +326,7 @@ function isInView(element) {
     
             } catch (error) {
                 console.error("Error al enviar el formulario:", error);
-                $("#mensaje-confirmacion").html("Error al conectar con el servidor.");
+                $("#mensaje-confirmacion").html("Error: " + error.message + ". Detalles: " + error);
             }
         });
     });
