@@ -2,6 +2,7 @@ const nodemailer = require("nodemailer");
 
 module.exports = async (req, res) => {
   // Solo se permiten solicitudes POST
+  console.log("📥 Se recibió una solicitud:", req.method);
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método no permitido" });
   }
