@@ -56,6 +56,7 @@ module.exports = async (req, res) => {
       subject: "Confirmación de Asistencia - Boda de Alejandra y Roberto",
       html: htmlContent
     });
+    console.log("✅ Correo enviado exitosamente");
 
     // Generar el enlace de WhatsApp
     // Suponemos que tienes una variable de entorno ADMIN_WHATSAPP_NUMBER con el número al que se enviará el mensaje
