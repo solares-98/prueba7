@@ -7,6 +7,9 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: "Método no permitido" });
   }
 
+  console.log("✅ Método permitido. Recibiendo datos...");
+  console.log("📩 Datos en req.body:", req.body);
+
   try {
     const { name, email, attending, phone } = req.body;
     if (!name || !email || !phone || !attending) {
