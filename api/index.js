@@ -26,6 +26,7 @@ module.exports = async (req, res) => {
         pass: process.env.EMAIL_PASS     // Contraseña de aplicación de Gmail
       }
     });
+    console.log("📧 Transportador de correo configurado correctamente");
 
     // Construir el contenido del correo (mismo texto que usaremos para WhatsApp)
     const messageContent = `
