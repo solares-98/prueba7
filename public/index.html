@@ -289,10 +289,10 @@ function isInView(element) {
             $('.stamp').html("Gracias!");
     
             const formData = {
-                name: document.querySelector("#name").value,
-                email: document.querySelector("#email").value,
-                phone: document.querySelector("#phone").value,
-                attending: document.querySelector("#attending").checked
+                name: document.querySelector("#name").value.trim(),
+                email: document.querySelector("#email").value.trim(),
+                phone: document.querySelector("#phone").value.trim(),
+                attending: document.querySelector("input[name='attending']:checked").value
             };
     
             console.log("Datos enviados:", formData);
