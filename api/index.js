@@ -7,9 +7,12 @@ module.exports = async (req, res) => {
   }
 
   try {
-    // Extraer datos del formulario
-    const { name, phone, email, attending } = req.body;
-    console.log("Datos recibidos:", req.body);
+    const { name, email, attending, phone } = req.body;
+    if (!name || !email || !phone || !attending) {
+      throw new Error("Faltan datos requeridos en la solicitud");
+    }
+
+    console.log("✅ Datos validados:", { name, email, attending, phone });
 
     // Configurar el transportador para enviar el correo
     const transporter = nodemailer.createTransport({
