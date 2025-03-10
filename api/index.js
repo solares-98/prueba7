@@ -1,42 +1,38 @@
 const nodemailer = require("nodemailer");
 
 module.exports = async (req, res) => {
-  // Solo se permiten solicitudes POST
-  console.log("📥 Se recibió una solicitud:", req.method);
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método no permitido" });
   }
 
-  console.log("✅ Método permitido. Recibiendo datos...");
-  console.log("📩 Datos en req.body:", req.body);
-
   try {
-    const { name, email, attending, phone } = req.body;
+    console.log("Datos recibidos en el backend:", req.body);
+
+    const { name, email, phone, attending } = req.body;
+    
+    // Validación rápida de datos
     if (!name || !email || !phone || !attending) {
-      throw new Error("Faltan datos requeridos en la solicitud");
+      throw new Error("Datos faltantes en la solicitud.");
     }
 
-    console.log("✅ Datos validados:", { name, email, attending, phone });
-
-    // Configurar el transportador para enviar el correo
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER,    // Configurado en Vercel (ej: personalsolares@gmail.com)
-        pass: process.env.EMAIL_PASS     // Contraseña de aplicación de Gmail
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
       }
     });
-    console.log("📧 Transportador de correo configurado correctamente");
 
-    // Construir el contenido del correo (mismo texto que usaremos para WhatsApp)
-    const messageContent = `Hola, confirmo mi asistencia a la boda. Mi nombre es: ${name}, mi correo: ${email} y este sería mi número: ${phone}.`;
+    const messageContent = `
+      Hola, confirmo mi asistencia a la boda. Mi nombre es: ${name}, mi correo: ${email} y este sería mi número en caso de comunicarse conmigo: ${phone}.
+    `;
 
     const htmlContent = `
       <div style="font-family: 'Josefin Slab', serif; text-align: center; background-color: #f8f9fa; padding: 20px;">
           <div style="background-color: #ffffff; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto; border: 1px solid #dddddd;">
               <div style="background-image: url('https://your-image-url.com/background.jpg'); background-size: cover; padding: 30px; border-radius: 10px;">
                   <h1 style="color: #ff6f61; font-family: 'Lancelot', cursive; font-size: 2.5em;">Alejandra y Roberto</h1>
-                  <p style="color: #555555; font-size: 1.2em;">Hola <strong>${name}</strong></p>
+                  <p style="color: #555555; font-size: 1.2em;">Hola <strong>${name}</strong>,</p>
                   <p style="color: #555555;">Nos complace invitarte a la boda de <strong>Alejandra y Roberto</strong>.</p>
                   <p style="color: #555555;"><strong>Fecha:</strong> 24 de Mayo de 2025</p>
                   <p style="color: #555555;"><strong>Ceremonia religiosa:</strong> Parroquia del Sagrado Corazón de Jesús, Calle Gil Preciado NO.11, Zona Centro, Tecolotlán Jal.</p>
@@ -48,53 +44,34 @@ module.exports = async (req, res) => {
       </div>
     `;
 
-    // Enviar el correo al destinatario (puedes modificar "to" según necesites)
+    // Verificamos antes de enviar el correo
+    console.log("Enviando correo a:", email);
+
     await transporter.sendMail({
       from: '"Boda de Alejandra y Roberto" <tu_correo@gmail.com>',
-      to: email, // Se envía al correo ingresado, o puedes enviarlo a otro destinatario
+      to: email,
       subject: "Confirmación de Asistencia - Boda de Alejandra y Roberto",
       html: htmlContent
     });
-    console.log("✅ Correo enviado exitosamente");
 
-    // Generar el enlace de WhatsApp
-    // Suponemos que tienes una variable de entorno ADMIN_WHATSAPP_NUMBER con el número al que se enviará el mensaje
-    // El número debe estar en formato internacional, por ejemplo: +521234567890.
-    // Para el enlace, eliminamos el signo '+'.
-    const adminNumber = process.env.ADMIN_WHATSAPP_NUMBER.replace(/^\+/, "");
+    console.log("Correo enviado con éxito a:", email);
+
+    // Generar enlace de WhatsApp
+    const adminNumber = process.env.ADMIN_WHATSAPP_NUMBER?.replace(/^\+/, "");
+    if (!adminNumber) {
+      throw new Error("Número de WhatsApp no configurado.");
+    }
+
     const whatsappLink = "https://wa.me/" + adminNumber + "?text=" + encodeURIComponent(messageContent);
-    console.log("✅ Link de WhatsApp generado:", whatsappLink);
+    console.log("Enlace de WhatsApp generado:", whatsappLink);
 
-    const swiper = new Swiper(".swiper", {
-        slidesPerView: 5,
-        spaceBetween: 0,
-        centeredSlides: true,
-        loop: true,
-        simulateTouch: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
-        navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        },
-      })
-      
-      const calculateHeight = () => {
-        const swiperSlideElements = Array.from(document.querySelectorAll('.swiper .swiper-slide'))
-        if (!swiperSlideElements.length) return
-        const width = swiperSlideElements[0].getBoundingClientRect().width
-        const height = Math.round(width / (16 / 9))
-        swiperSlideElements.map(element => element.style.height = `${height}px`)
-      }      
-      
-      document.addEventListener("DOMContentLoaded", calculateHeight)
-      addEventListener('resize', calculateHeight)
-
-    // Devolver la respuesta con el enlace de WhatsApp
     return res.status(200).json({
       message: "Correo enviado y enlace de WhatsApp generado correctamente.",
-      whatsappLink: whatsappLink
+      whatsappLink
     });
+
   } catch (error) {
     console.error("Error en el backend:", error);
-    return res.status(500).json({ error: "Error en el servidor" });
+    return res.status(500).json({ error: "Error en el servidor", details: error.message });
   }
 };
