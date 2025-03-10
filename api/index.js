@@ -29,13 +29,7 @@ module.exports = async (req, res) => {
     console.log("📧 Transportador de correo configurado correctamente");
 
     // Construir el contenido del correo (mismo texto que usaremos para WhatsApp)
-    const messageContent = `
-      Confirmación de Asistencia:
-      Nombre: ${name}
-      Teléfono: ${phone}
-      Email: ${email}
-      Asistencia: ${attending}
-    `;
+    const messageContent = `Hola, confirmo mi asistencia a la boda. Mi nombre es: ${name}, mi correo: ${email} y este sería mi número: ${phone}.`;
 
     const htmlContent = `
       <div style="font-family: 'Josefin Slab', serif; text-align: center; background-color: #f8f9fa; padding: 20px;">
@@ -69,6 +63,7 @@ module.exports = async (req, res) => {
     // Para el enlace, eliminamos el signo '+'.
     const adminNumber = process.env.ADMIN_WHATSAPP_NUMBER.replace(/^\+/, "");
     const whatsappLink = "https://wa.me/" + adminNumber + "?text=" + encodeURIComponent(messageContent);
+    console.log("✅ Link de WhatsApp generado:", whatsappLink);
 
     const swiper = new Swiper(".swiper", {
         slidesPerView: 5,
