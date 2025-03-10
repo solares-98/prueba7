@@ -293,10 +293,10 @@ $(document).ready(function() {
 
         // 💡 Corregimos el valor de attending (antes estaba incorrecto)
         const formData = {
-            name: $("#name").val().trim(),
-            email: $("#email").val().trim(),
-            phone: $("#phone").val().trim(),
-            attending: $("#attending").val() // ✅ Se obtiene el valor correctamente
+            name: document.querySelector("#name").value,
+            email: document.querySelector("#email").value,
+            phone: document.querySelector("#phone").value,
+            attending: document.querySelector("#attending").value
         };
 
         console.log("📤 Datos enviados:", formData);
@@ -322,9 +322,11 @@ $(document).ready(function() {
             // 📲 Si el servidor devuelve un enlace de WhatsApp, redirigir
             if (data.whatsappLink) {
                 console.log("🔗 Redirigiendo a WhatsApp:", data.whatsappLink);
-                window.location.href = data.whatsappLink;
+                setTimeout(() => {
+                    window.location.href = data.whatsappLink; // 🔄 Redirección
+                }, 2000);
             } else {
-                console.log("⚠️ No se encontró el enlace de WhatsApp en la respuesta.");
+                console.log("No se encontró el enlace de WhatsApp en la respuesta.");
             }
 
             // Resetear el formulario después del envío exitoso
