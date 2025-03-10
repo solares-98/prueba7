@@ -291,7 +291,7 @@ $(document).ready(function() {
         }
         $(".stamp").html("Gracias!");
 
-        // 💡 Corregimos el valor de attending (antes estaba incorrecto)
+        // Corregimos el valor de attending (antes estaba incorrecto)
         const formData = {
             name: document.querySelector("#name").value,
             email: document.querySelector("#email").value,
@@ -299,31 +299,32 @@ $(document).ready(function() {
             attending: document.querySelector("#attending").value
         };
 
-        console.log("📤 Datos enviados:", formData);
+        console.log("Datos enviados:", formData);
 
         try {
-            const response = await fetch("/api/index", { // ⚠️ Cambia esto a la URL correcta si es necesario
+            const response = await fetch("/api/index", { // Cambia esto a la URL correcta si es necesario
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData)
             });
+            console.log("Respuesta cruda del servidor:", response);
 
             if (!response.ok) {
                 const errorText = await response.text();
-                console.error("❌ Error en la respuesta del servidor:", response.status, errorText);
+                console.error(" Error en la respuesta del servidor:", response.status, errorText);
                 throw new Error("Error en el servidor: " + errorText);
             }
 
-            const data = await response.json(); // ✅ Ahora procesamos correctamente la respuesta JSON
-            console.log("✅ Respuesta del servidor:", data);
+            const data = await response.json(); // Ahora procesamos correctamente la respuesta JSON
+            console.log("Respuesta del servidor:", data);
 
             $("#mensaje-confirmacion").html("¡Gracias por confirmar tu asistencia!");
 
-            // 📲 Si el servidor devuelve un enlace de WhatsApp, redirigir
+            // Si el servidor devuelve un enlace de WhatsApp, redirigir
             if (data.whatsappLink) {
-                console.log("🔗 Redirigiendo a WhatsApp:", data.whatsappLink);
+                console.log(" Redirigiendo a WhatsApp:", data.whatsappLink);
                 setTimeout(() => {
-                    window.location.href = data.whatsappLink; // 🔄 Redirección
+                    window.location.href = data.whatsappLink; // Redirección
                 }, 2000);
             } else {
                 console.log("No se encontró el enlace de WhatsApp en la respuesta.");
@@ -336,7 +337,7 @@ $(document).ready(function() {
             }, 3000);
 
         } catch (error) {
-            console.error("⚠️ Error al enviar el formulario:", error);
+            console.error("Error al enviar el formulario:", error);
             $("#mensaje-confirmacion").html("Error al enviar el formulario. Inténtalo de nuevo.");
         }
     });
