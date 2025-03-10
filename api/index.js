@@ -23,9 +23,7 @@ module.exports = async (req, res) => {
       }
     });
 
-    const messageContent = `
-      Hola, confirmo mi asistencia a la boda. Mi nombre es: ${name}, mi correo: ${email} y este sería mi número en caso de comunicarse conmigo: ${phone}.
-    `;
+    const messageContent = `Hola, confirmo mi asistencia a la boda. Mi nombre es: ${name}, mi correo: ${email} y este sería mi número en caso de comunicarse conmigo: ${phone}.`;
 
     const htmlContent = `
       <div style="font-family: 'Josefin Slab', serif; text-align: center; background-color: #f8f9fa; padding: 20px;">
